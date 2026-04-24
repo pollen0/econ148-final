@@ -43,6 +43,17 @@ COUNTY_OUTCOMES_URLS: tuple[str, ...] = (
     "https://www2.census.gov/ces/opportunity/county_outcomes_simple.csv",
 )
 
+# County-to-CZ crosswalk used to attach CZ-level covariates onto the county frame.
+# The OI /2018/03/cty_covariates.csv path returns 403 behind Cloudflare as of 2026;
+# the dedicated cty_cz_st_crosswalk.csv on equality-of-opportunity.org is a small
+# (~130 KB) purpose-built crosswalk, and the census.gov cty_covariates.csv carries
+# the same mapping plus county-level covariates in 1 MB.
+CZ_CROSSWALK_URLS: tuple[str, ...] = (
+    "https://opportunityinsights.org/wp-content/uploads/2018/03/cty_covariates.csv",
+    "http://www.equality-of-opportunity.org/data/health/cty_cz_st_crosswalk.csv",
+    "https://www2.census.gov/ces/opportunity/cty_covariates.csv",
+)
+
 
 def ensure_raw_dir() -> Path:
     """Create data/raw if needed and return its path."""
@@ -100,3 +111,9 @@ def get_county_outcomes(filename: str = "county_outcomes_simple.csv") -> Path:
     """Download the Opportunity Atlas county-level rollup (day-1 outcome file)."""
     print("[3/3] Atlas county-level outcomes:")
     return _fetch_one(COUNTY_OUTCOMES_URLS, filename)
+
+
+def download_cz_crosswalk(filename: str = "cty_cz_st_crosswalk.csv") -> Path:
+    """Download the county-to-CZ crosswalk (maps 5-digit county FIPS to CZ id)."""
+    print("[+]   County-to-CZ crosswalk:")
+    return _fetch_one(CZ_CROSSWALK_URLS, filename)
