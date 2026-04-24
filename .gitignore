@@ -1,0 +1,40 @@
+# Downloaded raw datasets - fetched at runtime by src/data_loader.py
+data/raw/*.xls
+data/raw/*.xlsx
+data/raw/*.zip
+data/raw/*.csv
+data/raw/*.dta
+
+# Processed artifacts
+data/processed/*.csv
+data/processed/*.parquet
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.Python
+build/
+dist/
+
+# Jupyter
+.ipynb_checkpoints/
+*_executed.ipynb
+
+# Environment
+.env
+.venv/
+venv/
+
+# macOS
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
+
+# Keep the directory placeholders tracked
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+!report/.gitkeep
