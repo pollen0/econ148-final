@@ -21,6 +21,9 @@ dist/
 # Jupyter
 .ipynb_checkpoints/
 *_executed.ipynb
+# Keep the day-1 inspection notebook's executed copy tracked so GitHub
+# renders FIPS diagnostics and the Summary cell output for the team review.
+!notebooks/01_data_inspection_executed.ipynb
 
 # Environment
 .env
