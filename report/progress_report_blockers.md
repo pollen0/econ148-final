@@ -20,13 +20,22 @@ Resolved before Progress Report submission:
   `tract_outcomes_simple.csv` variant (~33 MB), which preserves
   `kfr_pooled_pooled_p25` plus the race and gender disaggregations.
 
+Resolved 2026-04-27:
+
+- Merge edge cases: decision is **drop** the 89 unmatched counties.
+  Composition turns out to be mechanical: 78 Puerto Rico municipios (out of
+  the 50-state-plus-DC scope of Chetty 2014), 8 Alaska boroughs whose FIPS
+  codes were reorganised after the 2014 crosswalk was published, and 3
+  post-2014 county renamings (Broomfield CO incorporation, Miami-Dade FL
+  relabel, Oglala Lakota SD ex-Shannon). Imputing covariates would invent
+  CZ identities for places that genuinely have none in the source paper.
+  Implemented in `src/data_processing.py:drop_unmatched_counties` and the
+  cleaned frame is saved as `data/processed/features.parquet` (3,130 x 106,
+  1.78 MB) by `scripts/result1_summary_stats.py`. Kabir and Emily can read
+  the parquet directly without rerunning the merge.
+
 Open items that need a team decision:
 
-- Merge edge cases: 89 of 3,219 Atlas counties have no Chetty 2014
-  covariates after the county-FIPS join (Puerto Rico, Guam, USVI, Northern
-  Marianas, plus a handful of counties whose FIPS were reorganised after
-  2014). The same gap propagates to the CZ-covariate merge - 97.24% match
-  rate. Drop these rows or impute the covariates from CZ averages?
 - Sheet selection: the brief named Chetty Online Data Table 5 as the
   source of the "famous five" covariates, but in the 2014 workbook Table 5
   carries CZ-level mobility *estimates* while the covariates live in
@@ -88,11 +97,11 @@ matplotlib in the same notebook:
 
 Heads-up Paul has loaded for her:
 
-- The merged feature matrix from notebook section 4 is roughly (3,130, 38)
-  for the OLS spec, with the same shape suitable as the RF input. Once the
-  team agrees on impute-or-drop for the 89 unmerged counties, Paul will
-  save a cleaned `features.parquet` under `data/processed/` that Emily's
-  RF pipeline can read directly without re-running the merge.
+- The cleaned merged frame is now available at
+  `data/processed/features.parquet` (3,130 counties x 106 columns,
+  1.78 MB). Emily's RF pipeline can read it directly with
+  `pd.read_parquet(...)` without re-running the merge or the unmatched-
+  county drop.
 
 ## Cross-cutting note for Leo's eyes
 
