@@ -44,37 +44,37 @@ OUTCOME = ("Outcome (kfr_pooled_pooled_p25)", "kfr_pooled_pooled_p25")
 PARQUET_OUT = ROOT / "data" / "processed" / "features.parquet"
 
 
+def _load_inputs() -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
+    """Download (or reuse cached) raw inputs and return county / crosswalk / CZ-cov frames."""
+    county = add_county_fips(pd.read_csv(get_county_outcomes()))
+    crosswalk = pd.read_csv(download_cz_crosswalk())
+    cz_cov = load_chetty_table8(get_chetty_2014())
+    return county, crosswalk, cz_cov
+
+
+def _row_for(label: str, col: str, df: pd.DataFrame) -> dict:
+    """Compute summary statistics (n, mean, sd, min, max) for one column."""
+    s = pd.to_numeric(df[col], errors="coerce")
+    return {"variable": label, "column_name": col, "n": int(s.count()),
+            "mean": s.mean(), "sd": s.std(), "min": s.min(), "max": s.max()}
+
+
+def _summary_stats(df: pd.DataFrame) -> pd.DataFrame:
+    """Build the summary-statistics table for the six predictors plus outcome."""
+    rows = [_row_for(label, col, df) for label, col in (*PREDICTORS, OUTCOME)]
+    return pd.DataFrame(rows)
+
+
 def main() -> None:
-    print("=" * 78)
-    print("Result 1 - features.parquet builder + summary stats")
-    print("=" * 78)
-    chetty_path = get_chetty_2014()
-    county_path = get_county_outcomes()
-    crosswalk_path = download_cz_crosswalk()
-
-    county_df = add_county_fips(pd.read_csv(county_path))
-    crosswalk_df = pd.read_csv(crosswalk_path)
-    cz_cov_df = load_chetty_table8(chetty_path)
-
-    print(f"\nMerging {county_df.shape} county outcomes with {cz_cov_df.shape} CZ covariates "
-          f"via {len(crosswalk_df)}-row crosswalk ...")
-    merged = merge_cz_covariates(county_df, crosswalk_df, cz_cov_df)
-    cleaned = drop_unmatched_counties(merged)
-
+    """End-to-end Result 1 pipeline: build features.parquet and print stats."""
+    print("=" * 78 + "\nResult 1 - features.parquet builder + summary stats\n" + "=" * 78)
+    county, crosswalk, cz_cov = _load_inputs()
+    cleaned = drop_unmatched_counties(merge_cz_covariates(county, crosswalk, cz_cov))
     out = save_features_parquet(cleaned, PARQUET_OUT)
     size_mb = out.stat().st_size / (1024 * 1024)
-    print(f"\nSaved features.parquet to:  {out}")
-    print(f"  shape: {cleaned.shape}   size: {size_mb:.2f} MB")
-
-    rows = []
-    for label, col in (*PREDICTORS, OUTCOME):
-        s = pd.to_numeric(cleaned[col], errors="coerce")
-        rows.append({"variable": label, "column_name": col, "n": int(s.count()),
-                     "mean": s.mean(), "sd": s.std(), "min": s.min(), "max": s.max()})
-    stats = pd.DataFrame(rows)
-
-    print("\nResult 1 - summary statistics (six predictors + outcome):")
-    print(stats.to_string(index=False, float_format="%.4f"))
+    print(f"\nSaved features.parquet to: {out}  (shape={cleaned.shape}, size={size_mb:.2f} MB)")
+    print("\nResult 1 - summary statistics:")
+    print(_summary_stats(cleaned).to_string(index=False, float_format="%.4f"))
 
 
 if __name__ == "__main__":
