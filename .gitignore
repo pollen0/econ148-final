@@ -1,13 +1,24 @@
-# Downloaded raw datasets - fetched at runtime by src/data_loader.py
+# Downloaded raw datasets - the loader will (re)download anything missing.
+# We track the four files used for the final-report submission so that a
+# fresh clone (or zip extract) is fully self-contained without needing
+# network access. The patterns below ignore unrelated raw downloads while
+# the explicit !exclusions keep the four canonical files tracked.
 data/raw/*.xls
 data/raw/*.xlsx
 data/raw/*.zip
 data/raw/*.csv
 data/raw/*.dta
+!data/raw/chetty2014_online_data_tables.xls
+!data/raw/county_outcomes_simple.csv
+!data/raw/tract_outcomes_simple.csv
+!data/raw/cty_cz_st_crosswalk.csv
 
-# Processed artifacts
+# Processed artifacts. features.parquet is the downstream input for the
+# OLS and RF notebooks and per Leo's submission spec needs to be in the
+# repo; other processed CSVs/parquets remain ignored.
 data/processed/*.csv
 data/processed/*.parquet
+!data/processed/features.parquet
 
 # Python
 __pycache__/
