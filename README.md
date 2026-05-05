@@ -56,7 +56,7 @@ Notebooks are run in numeric order. Each notebook is independent (uses
 | 1 | `notebooks/01_data_inspection.ipynb` | Paul | downloads cached, FIPS diagnostics, three-way intersection, summary-for-Leo cell |
 | 2 | `scripts/result1_summary_stats.py` | Paul | rebuilds `data/processed/features.parquet` and prints the Result 1 summary-stats table for the six predictors plus the outcome |
 | 3 | `notebooks/02_ols_baseline.ipynb` | Kabir | OLS fit with HC3 standard errors and the regression table (Result 2) |
-| 4 | `scripts/result3_rf_importance.py` and `notebooks/03_random_forest.ipynb` | Emily | RF fit (R^2, RMSE) and the ranked feature-importance bar chart (Result 3, saved to `report/result3_feature_importance.png`) |
+| 4 | `notebooks/03_random_forest.ipynb` (full pipeline) and `scripts/result3_rf_importance.py` (chart-only CLI variant) | Emily | RF fit on all 38 covariates (test R^2 = 0.642, RMSE = 0.039), the ranked feature-importance bar chart (Result 3, `report/result3_feature_importance.png`), the OLS-aligned permutation-importance chart on the six-variable subset (`report/result3b_permutation_importance.png`), and the 2x2 partial-dependence panel for the top four predictors (`report/result3c_partial_dependence.png`) |
 
 To regenerate everything from scratch:
 
@@ -77,7 +77,10 @@ Running the steps above (re)produces the following artefacts:
 - `data/raw/cty_cz_st_crosswalk.csv` (0.13 MB)
 - `data/processed/features.parquet` (3,130 rows by 106 columns, 1.78 MB)
 - `notebooks/01_data_inspection_executed.ipynb` (with embedded outputs)
-- `report/result3_feature_importance.png` (Result 3 chart)
+- `report/result3_feature_importance.png` (Result 3, MDI ranking of all 38 CZ covariates)
+- `report/result3b_permutation_importance.png` (OLS-aligned permutation importance on the six-variable subset)
+- `report/result3c_partial_dependence.png` (2x2 PDP panel for the top four predictors)
+- `notebooks/03_random_forest_executed.ipynb` (with embedded outputs and charts)
 - Console output from the two scripts: Result 1 summary-stats table and Result 3
   test R^2 / RMSE / top-10 feature ranking
 

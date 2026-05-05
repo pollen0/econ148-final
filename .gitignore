@@ -32,9 +32,11 @@ dist/
 # Jupyter
 .ipynb_checkpoints/
 *_executed.ipynb
-# Keep the day-1 inspection notebook's executed copy tracked so GitHub
-# renders FIPS diagnostics and the Summary cell output for the team review.
+# Keep the executed copies of the three submission notebooks tracked so GitHub
+# renders embedded outputs (FIPS diagnostics, the OLS regression table, and the
+# RF feature-importance / PDP plots) for the team and Leo's review.
 !notebooks/01_data_inspection_executed.ipynb
+!notebooks/03_random_forest_executed.ipynb
 
 # Environment
 .env
