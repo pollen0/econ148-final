@@ -149,15 +149,20 @@ Enforced across every module and notebook in this repo:
 - All code is modular (functions live in `src/`, notebooks and scripts import them)
   and reproducible (downloads are cached; seeds are explicit, default `random_state=148`).
 
-## AI-usage disclosure (stub)
+## AI-usage disclosure
 
-Per Econ 148 course policy, any use of AI tools in producing this repo is
-disclosed here. This section will be updated with specifics before the final
-submission. Planned disclosures:
+Per Econ 148 course policy, AI tool usage is disclosed as follows:
 
-- Whether AI was used to draft code, and if so, where.
-- Whether AI was used to edit prose in the report, and if so, where.
-- Whether AI was used to explore alternative model specifications, and if so,
-  which were considered.
-
-No AI-generated output is used without human review and verification.
+- **Claude (Anthropic)** was used by Leo (project lead) to draft and format
+  LaTeX report sections, write checkpoint submissions, draft Google Form
+  responses for Checkpoints 1 and 2, and organize progress report content
+  from teammate summaries. All AI-generated prose was reviewed and edited
+  by group members before inclusion.
+- **Claude (Anthropic)** was used by Paul to assist with data loader
+  scaffolding and commit message drafting. All code was reviewed and
+  verified by Paul before pushing.
+- No AI tools were used to generate statistical results, manipulate data,
+  or produce figures. All model outputs (OLS coefficients, RF importance
+  scores) were produced by running the notebooks directly.
+- Verification method: every AI-assisted code contribution was executed
+  end-to-end via nbconvert or direct Python run before being committed.
